@@ -19,13 +19,8 @@ authorize("admin"),
 addEmployee
 );
 
-// Get All Employees - Admin & Manager
-router.get(
-"/",
-protect,
-authorize("admin", "manager"),
-getEmployees
-);
+// Get All Employees - Public Access
+router.get("/", getEmployees);
 
 // Update Employee - Admin Only
 router.put(

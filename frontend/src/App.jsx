@@ -29,7 +29,7 @@ function App() {
 
   // ================= FETCH =================
   useEffect(() => {
-    fetch("http://16.171.0.64:5000/api/employees", {
+    fetch("https://employee-management-system-2-d3rq.onrender.com/api/employees", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -40,7 +40,7 @@ function App() {
         else setEmployees([]);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [token]);
 
   // ================= INPUT =================
   const handleChange = (e) => {
@@ -50,22 +50,23 @@ function App() {
   // ================= ADD / UPDATE =================
   const handleAdd = () => {
     if (editId) {
-      fetch(`http://16.171.0.64:5000/api/employees/${editId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(form)
-      })
+      fetch(
+        `https://employee-management-system-2-d3rq.onrender.com/api/employees/${editId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(form)
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           alert("Employee Updated");
 
           setEmployees(
-            employees.map((emp) =>
-              emp._id === editId ? data : emp
-            )
+            employees.map((emp) => (emp._id === editId ? data : emp))
           );
 
           setEditId(null);
@@ -73,7 +74,7 @@ function App() {
         });
 
     } else {
-      fetch("http://16.171.0.64:5000/api/employees/add", {
+      fetch("https://employee-management-system-2-d3rq.onrender.com/api/employees/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,12 +93,15 @@ function App() {
 
   // ================= DELETE =================
   const handleDelete = (id) => {
-    fetch(`http://16.171.0.64:5000/api/employees/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`
+    fetch(
+      `https://employee-management-system-2-d3rq.onrender.com/api/employees/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       }
-    })
+    )
       .then((res) => res.json())
       .then(() => {
         alert("Employee Deleted");
@@ -112,57 +116,22 @@ function App() {
   };
 
   // ================= SEARCH =================
-  const filteredEmployees = employees.filter((emp) =>
-    emp.name.toLowerCase().includes(search.toLowerCase()) ||
-    emp.department.toLowerCase().includes(search.toLowerCase())
+  const filteredEmployees = employees.filter(
+    (emp) =>
+      emp.name.toLowerCase().includes(search.toLowerCase()) ||
+      emp.department.toLowerCase().includes(search.toLowerCase())
   );
-
-  // ================= DASHBOARD =================
-  const totalEmployees = employees.length;
-
-  const totalSalary = employees.reduce(
-    (sum, emp) => sum + Number(emp.salary || 0),
-    0
-  );
-
-  const departments = [...new Set(employees.map(e => e.department))].length;
 
   return (
     <div className="container mt-4">
 
-      {/* HEADER + LOGOUT */}
+      {/* HEADER */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Employee Management System</h2>
 
         <button className="btn btn-danger" onClick={handleLogout}>
           Logout
         </button>
-      </div>
-
-      {/* DASHBOARD */}
-      <div className="row mb-4 text-center">
-
-        <div className="col-md-4">
-          <div className="card bg-primary text-white p-3">
-            <h5>Total Employees</h5>
-            <h3>{totalEmployees}</h3>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card bg-success text-white p-3">
-            <h5>Total Salary</h5>
-            <h3>{totalSalary}</h3>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card bg-warning text-dark p-3">
-            <h5>Departments</h5>
-            <h3>{departments}</h3>
-          </div>
-        </div>
-
       </div>
 
       {/* FORM */}

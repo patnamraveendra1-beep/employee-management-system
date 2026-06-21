@@ -5,22 +5,20 @@ function Login({ setToken }) {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    fetch("http://16.171.0.64:5000/api/auth/login", {
+    fetch("https://employee-management-system-2-d3rq.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log("LOGIN RESPONSE:", data);
 
-        // ❗ check token exists
         if (data.token) {
           localStorage.setItem("token", data.token);
 
-          // 👉 OPTIONAL (role system later use chestam)
           if (data.role) {
             localStorage.setItem("role", data.role);
           }
@@ -38,10 +36,7 @@ function Login({ setToken }) {
 
   return (
     <div className="container mt-5" style={{ maxWidth: "400px" }}>
-
-      <h2 className="text-center mb-4">
-        Employee System Login
-      </h2>
+      <h2 className="text-center mb-4">Employee System Login</h2>
 
       <input
         className="form-control mb-2"
@@ -58,13 +53,9 @@ function Login({ setToken }) {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button
-        className="btn btn-primary w-100"
-        onClick={handleLogin}
-      >
+      <button className="btn btn-primary w-100" onClick={handleLogin}>
         Login
       </button>
-
     </div>
   );
 }
